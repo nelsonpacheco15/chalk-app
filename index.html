@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Chalk</title>
+  <meta name="description" content="Rotating calisthenics + gym program, one-tap food log, skill progress.">
+  <meta name="theme-color" content="#000000">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Chalk">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" href="icon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="icon-180.png">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <main id="view" class="view"></main>
+  <div id="overlay"></div>
+  <div id="sheet-root"></div>
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+  <nav class="tabs" aria-label="Sections">
+    <button class="tab" data-tab="today">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><circle cx="12" cy="12" r="3"/></svg>
+      <span>Today</span>
+    </button>
+    <button class="tab" data-tab="fuel">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3c3.5 4 6 7.2 6 10.5A6 6 0 0 1 6 13.5C6 10.2 8.5 7 12 3z"/></svg>
+      <span>Food</span>
+    </button>
+    <button class="tab" data-tab="skills">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20h4v-5h4v-5h4V5h4"/></svg>
+      <span>Skills</span>
+    </button>
+    <button class="tab" data-tab="me">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8.5" r="3.5"/><path d="M5 20c1.2-3.6 3.8-5.5 7-5.5s5.8 1.9 7 5.5"/></svg>
+      <span>Me</span>
+    </button>
+  </nav>
+
+  <script src="program.js"></script>
+  <script src="skills.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
