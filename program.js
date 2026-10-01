@@ -31,6 +31,12 @@ const EX = {
   weighted_pu:   { name: 'Weighted push-up', type: 'weight', sets: 3, lo: 10, hi: 15, rest: 90 },
   deficit_pu:    { name: 'Deficit push-up', type: 'reps', sets: 3, lo: 12, hi: 20, rest: 90 },
   oh_ext:        { name: 'Overhead cable extension', type: 'weight', sets: 3, lo: 10, hi: 15, rest: 60 },
+  bench:         { name: 'Bench press', type: 'weight', sets: 4, lo: 5, hi: 8, rest: 150, cue: 'Shoulder blades pinned back, feet planted, bar to lower chest.' },
+  cable_fly:     { name: 'Cable fly', type: 'weight', sets: 3, lo: 12, hi: 15, rest: 60, cue: 'Slight bend in the elbows, hug the chest, squeeze 1 s.' },
+  pec_deck:      { name: 'Pec deck', type: 'weight', sets: 3, lo: 12, hi: 15, rest: 60 },
+  close_grip:    { name: 'Close-grip bench press', type: 'weight', sets: 3, lo: 6, hi: 10, rest: 120, cue: 'Hands shoulder-width, elbows tucked. Triceps.' },
+  skull:         { name: 'Skull crusher', type: 'weight', sets: 3, lo: 8, hi: 12, rest: 75, cue: 'EZ bar to the forehead, elbows still.' },
+  diamond_pu:    { name: 'Diamond push-up', type: 'reps', sets: 3, lo: 10, hi: 20, rest: 60 },
   pushdown:      { name: 'Cable triceps pushdown (rope)', type: 'weight', sets: 3, lo: 10, hi: 15, rest: 60, cue: 'Elbows pinned, spread the rope at the bottom.' },
   cable_y:       { name: 'Cable Y-raise', type: 'weight', sets: 3, lo: 12, hi: 15, rest: 60, cue: 'Lower traps + side delts. Arms make a Y, thumbs up.' },
   rear_fly:      { name: 'Rear delt fly', type: 'weight', sets: 3, lo: 15, hi: 20, rest: 60, cue: 'Pinkies up, think "push the dumbbells apart".' },
@@ -126,28 +132,29 @@ const EX = {
 // Each slot lists [weekA, weekB, weekC] exercise ids. A single id means it stays every week.
 const DAYS = {
   // Skill blocks for focused skills are added in front automatically (see FAMILY_DAYS in app.js).
-  1: { title: 'Push', sub: 'Strength + shoulders', tone: 'push', slots: [
+  1: { title: 'Push', sub: 'Chest, shoulders, triceps · heavy', tone: 'push', slots: [
         ['planche_str', 'planche_tpu', 'planche_str'],
         ['pike_pu', 'hspu_neg', 'hspu'],
-        ['dips_w', 'incline_db', 'ring_dips'],
+        ['dips_w', 'bench', 'dips_w'],
         ['ohp', 'seated_db_ohp', 'ohp'],
+        ['incline_db', 'ring_dips', 'incline_db'],
         ['lat_cable', 'lat_db', 'lat_lean'],
-        ['face_pull'],
-        ['pushdown', 'pushdown', 'oh_ext'],
-        ['ab_wheel', 'hlr', 'ab_wheel'],
+        ['skull', 'pushdown', 'skull'],
+        ['oh_ext'],
       ] },
-  2: { title: 'Pull', sub: 'Levers + forearms', tone: 'pull', slots: [
+  2: { title: 'Pull', sub: 'Back, biceps, forearms · levers', tone: 'pull', slots: [
         ['fl_straddle', 'fl_raise', 'fl_neg'],
         ['muscle_up', 'mu_slow', 'muscle_up'],
         ['back_lever'],
         ['pullup_w', 'c2b', 'archer'],
         ['bb_row', 'cable_row', 'cs_row'],
         ['face_pull'],
+        ['rear_fly'],
         ['wrist_curl', 'reverse_curl', 'wrist_curl'],
         ['calf_single'],
         ['hlr', 't2b', 'dragon_flag'],
       ] },
-  3: { title: 'Legs', sub: 'Quads + calves + abs', tone: 'legs', slots: [
+  3: { title: 'Legs', sub: 'Quads, calves, abs · heavy', tone: 'legs', slots: [
         ['handstand'],
         ['lsit'],
         ['back_squat', 'front_squat', 'back_squat'],
@@ -155,30 +162,31 @@ const DAYS = {
         ['rdl', 'hip_thrust', 'rdl'],
         ['calf'],
         ['tib_raise'],
-        ['cable_crunch', 'ab_wheel', 'cable_crunch'],
+        ['ab_wheel'],
+        ['cable_crunch'],
         ['ytw', 'ext_rot', 'ytw'],
       ] },
-  4: { title: 'Push', sub: 'Volume + shoulders', tone: 'push', slots: [
+  4: { title: 'Push', sub: 'Chest, shoulders, triceps · volume', tone: 'push', slots: [
         ['planche_lean', 'pseudo_pu', 'planche_lean'],
-        ['incline_db', 'weighted_pu', 'deficit_pu'],
+        ['bench', 'incline_db', 'weighted_pu'],
         ['arnold', 'seated_db_ohp', 'arnold'],
+        ['cable_fly', 'pec_deck', 'cable_fly'],
         ['lat_db', 'lat_cable', 'lat_db'],
-        ['rear_fly', 'cable_y', 'rear_fly'],
-        ['oh_ext', 'pushdown', 'oh_ext'],
-        ['ab_wheel', 'dragon_flag', 'ab_wheel'],
+        ['close_grip', 'diamond_pu', 'close_grip'],
+        ['pushdown', 'oh_ext', 'pushdown'],
       ] },
-  5: { title: 'Pull', sub: 'Volume + arms', tone: 'pull', slots: [
+  5: { title: 'Pull', sub: 'Back, rear delts, arms · volume', tone: 'pull', slots: [
         ['fl_tuck'],
         ['pullup', 'pullup_wide', 'pullup_neutral'],
         ['pulldown', 'sa_row', 'pulldown'],
         ['face_pull'],
-        ['rear_fly'],
+        ['rear_fly', 'cable_y', 'rear_fly'],
         ['hammer', 'incline_curl', 'hammer'],
         ['reverse_curl', 'rev_wrist', 'reverse_curl'],
         ['calf_single'],
         ['hollow_rock', 'hlr', 'hollow_rock'],
       ] },
-  6: { title: 'Legs', sub: 'Volume + calves + grip', tone: 'legs', slots: [
+  6: { title: 'Legs', sub: 'Quads, calves, abs · volume', tone: 'legs', slots: [
         ['handstand'],
         ['lsit'],
         ['leg_press', 'front_squat', 'leg_press'],
@@ -187,6 +195,7 @@ const DAYS = {
         ['calf_seated'],
         ['calf'],
         ['farmer'],
+        ['ab_wheel', 'dragon_flag', 'ab_wheel'],
         ['hlr', 't2b', 'hlr'],
         ['pallof'],
       ] },
