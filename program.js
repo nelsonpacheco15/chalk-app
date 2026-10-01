@@ -23,7 +23,7 @@ const EX = {
   dips:          { name: 'Parallel bar dips', type: 'reps', sets: 4, lo: 8, hi: 15, rest: 120, cue: 'Slight forward lean, shoulders down, full depth. 3 s down when 15 is easy.' },
   incline_db:    { name: 'Incline dumbbell press', type: 'weight', sets: 4, lo: 6, hi: 10, rest: 120 },
   bar_dips:      { name: 'Straight bar dips', type: 'reps', sets: 4, lo: 8, hi: 15, rest: 120, cue: 'Lean over the bar, elbows back. The top half of every muscle-up.' },
-  arnold:        { name: 'Arnold press', type: 'weight', sets: 3, lo: 8, hi: 12, rest: 90 },
+  arnold:        { name: 'Arnold press', type: 'weight', sets: 3, lo: 8, hi: 12, rest: 90, cue: 'Rotate from palms-in to palms-out as you press. Front and side delts.' },
   seated_db_ohp: { name: 'Seated dumbbell press', type: 'weight', sets: 3, lo: 8, hi: 12, rest: 90 },
   lat_cable:     { name: 'Cable lateral raise', type: 'weight', sets: 4, lo: 12, hi: 20, rest: 60, cue: 'Side delts build the 3D look. Lead with the elbow.' },
   lat_db:        { name: 'Dumbbell lateral raise', type: 'weight', sets: 4, lo: 12, hi: 20, rest: 60, cue: 'Slow on the way down. No swinging.' },
@@ -32,7 +32,8 @@ const EX = {
   deficit_pu:    { name: 'Deficit push-up', type: 'reps', sets: 3, lo: 10, hi: 20, rest: 90, cue: 'Hands on handles or plates, chest below hand level at the bottom. 2 s pause in the stretch.' },
   oh_ext:        { name: 'Overhead triceps extension (cable)', type: 'weight', sets: 3, lo: 10, hi: 15, rest: 60 },
   cable_fly:     { name: 'Cable fly', type: 'weight', sets: 3, lo: 12, hi: 15, rest: 60, cue: 'Slight bend in the elbows, hug the chest, squeeze 1 s.' },
-  pec_deck:      { name: 'Pec deck', type: 'weight', sets: 3, lo: 12, hi: 15, rest: 60 },
+  machine_press: { name: 'Machine chest press', type: 'weight', sets: 4, lo: 8, hi: 12, rest: 90, cue: 'Shoulder blades back, full stretch, squeeze at the top. Mid chest.' },
+  pec_deck:      { name: 'Pec deck', type: 'weight', sets: 3, lo: 10, hi: 15, rest: 60, cue: 'Slow stretch, 1 s squeeze. Inner and mid chest.' },
   skull:         { name: 'Skull crusher', type: 'weight', sets: 3, lo: 8, hi: 12, rest: 75, cue: 'EZ bar to the forehead, elbows still.' },
   archer_pu:     { name: 'Archer push-up (each side)', type: 'reps', sets: 4, lo: 5, hi: 10, rest: 90, cue: 'Working arm bent, other arm straight out. Path to the one-arm push-up.' },
   bar_tri:       { name: 'Bar triceps extension', type: 'reps', sets: 3, lo: 8, hi: 12, rest: 75, cue: 'Hands on a low bar (Smith or rack), bend only the elbows, forehead under the bar.' },
@@ -139,15 +140,16 @@ const EX = {
 // Each slot lists [weekA, weekB, weekC] exercise ids. A single id means it stays every week.
 const DAYS = {
   // Skill blocks for focused skills are added in front automatically (see FAMILY_DAYS in app.js).
-  // Every push day hits all push muscles once: skills, lower chest, serratus/front delt or mid chest,
-  // upper chest, front + side delts, side delts, triceps, then a push-up finisher.
+  // Push days: calisthenics skills first, then gym work that hits every push muscle once:
+  // lower chest (dips), upper chest (incline DB), mid chest (machine press / pec deck),
+  // front + side delts (Arnold), side delts (laterals), triceps, then a push-up finisher.
   1: { title: 'Push', sub: 'Strength · chest, shoulders, triceps', tone: 'push', slots: [
         ['planche_str', 'planche_tpu', 'planche_str'],
         ['pike_pu', 'hspu_neg', 'hspu'],
         ['dips', 'bar_dips', 'dips'],
-        ['pseudo_pu'],
         ['incline_db'],
-        ['arnold', 'seated_db_ohp', 'arnold'],
+        ['machine_press'],
+        ['arnold'],
         ['lat_cable', 'lat_db', 'lat_lean'],
         ['oh_ext', 'skull', 'oh_ext'],
         ['pushup_max'],
@@ -177,12 +179,12 @@ const DAYS = {
       ] },
   4: { title: 'Push', sub: 'Volume · chest, shoulders, triceps', tone: 'push', slots: [
         ['planche_lean'],
-        ['decline_pu', 'archer_pu', 'decline_pu'],
         ['bar_dips', 'dips', 'bar_dips'],
-        ['deficit_pu', 'pec_deck', 'deficit_pu'],
-        ['seated_db_ohp', 'arnold', 'seated_db_ohp'],
+        ['incline_db'],
+        ['pec_deck'],
+        ['arnold'],
         ['lat_db', 'lat_cable', 'lat_db'],
-        ['pushdown', 'diamond_pu', 'pushdown'],
+        ['pushdown', 'oh_ext', 'pushdown'],
         ['pushup_max'],
       ] },
   5: { title: 'Pull', sub: 'Back, rear delts, arms · volume', tone: 'pull', slots: [
