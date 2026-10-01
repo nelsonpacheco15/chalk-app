@@ -40,6 +40,14 @@ function load() {
   return freshState();
 }
 let S = load();
+// Add new built-in recipes to existing installs once (a deleted recipe stays deleted).
+(function seedRecipes() {
+  S.seeded = S.seeded || [];
+  const fresh = RECIPES.filter(r => !S.seeded.includes(r.id) && !S.meals.some(m => m.id === r.id));
+  if (fresh.length) S.meals = [...fresh.map(r => ({ ...r })), ...S.meals];
+  RECIPES.forEach(r => { if (!S.seeded.includes(r.id)) S.seeded.push(r.id); });
+  save();
+})();
 function save() { try { localStorage.setItem(KEY, JSON.stringify(S)); } catch (e) { /* ignore */ } }
 
 // Day photos live in their own keys so the main state stays small.
@@ -469,6 +477,7 @@ function renderFuel() {
     <div class="score-sub"><div><i style="background:var(--text)"></i><b>${tot.kcal}</b> / ${T.kcal} kcal</div><div><i style="background:var(--accent)"></i><b>${tot.p}</b> / ${T.p} g protein</div></div>
     <div class="sect"><span class="label">Tap to log</span><button class="link ${ui.editMeals ? '' : 'dim'}" data-act="toggle-edit">${ui.editMeals ? 'Done' : 'Edit'}</button></div>
     <div class="meals ${ui.editMeals ? 'editing' : ''}">${tiles}<button class="meal add" data-act="new-meal">+ New</button></div>
+    ${!list.length && S.meals.some(m => m.day) ? `<button class="cta ghost" style="margin-top:12px" data-act="log-day">Log my usual day</button>` : ''}
     <div class="sect"><span class="label">Logged</span>${!list.length && yday.length ? `<button class="link" data-act="copy-yday">Copy yesterday</button>` : `<button class="link dim" data-act="quick-add">One-off</button>`}</div>
     <div class="rows">${rows}</div>`;
 }
@@ -656,6 +665,7 @@ function mealSheet(m, mode) {
         <label class="field"><span>Kcal</span><input type="number" inputmode="numeric" name="kcal" required value="${m ? m.kcal : ''}"></label>
         <label class="field"><span>Protein g</span><input type="number" inputmode="numeric" name="p" required value="${m ? m.p : ''}"></label>
       </div>
+      ${m && m.items ? `<p class="label" style="margin:14px 0 0;line-height:1.5">${m.items.map(esc).join(' · ')}</p>` : ''}
       ${mode === 'new' ? `<label class="check-row"><input type="checkbox" name="log" checked> Log it now</label>` : ''}
       <div class="btn-row"><button class="cta" type="submit">${mode === 'quick' ? 'Log' : 'Save'}</button>
         ${mode === 'edit' ? `<button class="cta danger" type="button" data-act="del-meal" data-id="${m.id}">Delete</button>` : ''}</div>
@@ -745,6 +755,12 @@ document.addEventListener('click', e => {
       const list = S.food[ui.foodDate] || [], idx = list.findIndex(f => f.id === id); if (idx < 0) break;
       const [gone] = list.splice(idx, 1); save(); quiet();
       toast('Removed', 'Undo', () => { list.splice(idx, 0, gone); save(); quiet(); });
+      break;
+    }
+    case 'log-day': {
+      const day = S.meals.filter(m => m.day);
+      const added = day.map(m => logMeal(m, ui.foodDate)); quiet();
+      toast(`Logged ${day.length} meals`, 'Undo', () => { const ids = added.map(x => x.id); S.food[ui.foodDate] = S.food[ui.foodDate].filter(f => !ids.includes(f.id)); save(); quiet(); });
       break;
     }
     case 'copy-yday': {

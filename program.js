@@ -222,13 +222,21 @@ const SKILLS = [
   { key: 'lsit',        name: 'L-sit',           unit: 's' },
 ];
 
+// The athlete's own recipes. Macros estimated from standard values
+// (soy milk 4 g protein/100 ml, dried/pressed tofu ~150 kcal + 16 g protein per 100 g, Greek-style yogurt).
+const RECIPES = [
+  { id: 'r_breakfast', name: 'Oats, banana + protein', kcal: 515, p: 38, day: true,
+    items: ['55 g oats', '200 ml soy milk', '1 big banana', '27 g protein powder'] },
+  { id: 'r_lunch', name: 'Tofu, edamame + sweet potato', kcal: 495, p: 39, day: true,
+    items: ['80 g edamame', '150 g dried tofu', '1 medium sweet potato', '2× coffee (120 g) with 40 g milk'] },
+  { id: 'r_dinner', name: 'Pasta, eggs + tofu', kcal: 725, p: 53, day: true,
+    items: ['80 g pasta (dry)', '2 eggs', '60 g broccoli', '80 g edamame', '120 g dried tofu'] },
+  { id: 'r_snack', name: 'Yogurt, blueberries + banana', kcal: 200, p: 10, day: true,
+    items: ['80 g yogurt', '40 g blueberries', '1 big banana'] },
+];
+
 const DEFAULT_MEALS = [
-  { id: 'm1', name: 'Greek yogurt, oats + berries', kcal: 420, p: 32 },
-  { id: 'm2', name: 'Chicken, rice + veg',          kcal: 600, p: 48 },
-  { id: 'm3', name: '3 eggs + 2 toast',             kcal: 430, p: 24 },
-  { id: 'm4', name: 'Protein shake',                kcal: 130, p: 25 },
-  { id: 'm5', name: 'Tuna wrap',                    kcal: 450, p: 38 },
-  { id: 'm6', name: 'Banana',                       kcal: 105, p: 1  },
-  { id: 'm7', name: 'Salmon, potatoes + salad',     kcal: 650, p: 40 },
-  { id: 'm8', name: 'Cottage cheese + fruit',       kcal: 250, p: 25 },
+  ...RECIPES,
+  { id: 'm4', name: 'Protein shake', kcal: 130, p: 25 },
+  { id: 'm6', name: 'Banana', kcal: 120, p: 1 },
 ];
