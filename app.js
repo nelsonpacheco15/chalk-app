@@ -68,7 +68,7 @@ function getPhoto(tone) { try { return localStorage.getItem(photoKey(tone)); } c
 /* ================= program ================= */
 
 // Which weekdays each skill family is trained on (0 = Sunday, light balance practice).
-const FAMILY_DAYS = { push: [1, 4], pull: [2, 5], dynamic: [2, 5], balance: [3, 6, 0], core: [3, 6] };
+const FAMILY_DAYS = { push: [1, 4], pull: [2, 5], dynamic: [2, 5], balance: [3, 6, 0], core: [3, 6], legs: [3, 6] };
 const FOCUS_MAX = typeof MAX_FOCUS !== 'undefined' ? MAX_FOCUS : 6;
 
 function levelOf(tree) {
@@ -187,7 +187,7 @@ function estMinutes(ids) {
 const ui = { tab: 'today', date: today(), foodDate: today(), editMeals: false, page: null, p: null, bw: null };
 
 const TONE = { push: 'var(--accent)', pull: 'var(--accent)', legs: 'var(--accent)', mob: 'var(--accent)', rest: 'var(--dim)' };
-const FAM_TONE = { push: 'var(--accent)', balance: 'var(--accent)', pull: 'var(--accent)', dynamic: 'var(--accent)', core: 'var(--accent)' };
+const FAM_TONE = { push: 'var(--accent)', balance: 'var(--accent)', pull: 'var(--accent)', dynamic: 'var(--accent)', core: 'var(--accent)', legs: 'var(--accent)' };
 const DOW = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 const MON = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 const ROT = ['A', 'B', 'C'];
