@@ -16,7 +16,7 @@ const EX = {
   hspu:          { name: 'Wall handstand push-up', type: 'reps', sets: 5, lo: 1, hi: 4, rest: 180, skill: 'hspu', cue: 'Singles are fine. Stop a rep short of failure.' },
   planche_str:   { name: 'Straddle planche hold', type: 'time', sets: 5, lo: 5, hi: 12, rest: 120, skill: 'planche', cue: 'Protract hard, posterior pelvic tilt, lock the elbows.' },
   planche_tpu:   { name: 'Tuck planche push-up', type: 'reps', sets: 4, lo: 3, hi: 6, rest: 150, cue: 'Keep the lean; don’t let hips drop on the way up.' },
-  pseudo_pu:     { name: 'Pseudo planche push-up', type: 'reps', sets: 4, lo: 8, hi: 12, rest: 90, cue: 'Hands by the hips, fingers out, lean forward the whole set.' },
+  pseudo_pu:     { name: 'Pseudo planche push-up', type: 'reps', sets: 4, lo: 6, hi: 12, rest: 120, cue: 'Hands by the hips, fingers out, lean forward the whole set.' },
   planche_lean:  { name: 'Planche lean', type: 'time', sets: 3, lo: 15, hi: 30, rest: 75, cue: 'Lean until it’s hard to hold, protracted and straight-armed.' },
 
   // Push strength / hypertrophy
@@ -36,6 +36,8 @@ const EX = {
   skull:         { name: 'Skull crusher', type: 'weight', sets: 3, lo: 8, hi: 12, rest: 75, cue: 'EZ bar to the forehead, elbows still.' },
   archer_pu:     { name: 'Archer push-up (each side)', type: 'reps', sets: 4, lo: 5, hi: 10, rest: 90, cue: 'Working arm bent, other arm straight out. Path to the one-arm push-up.' },
   bar_tri:       { name: 'Bar triceps extension', type: 'reps', sets: 3, lo: 8, hi: 12, rest: 75, cue: 'Hands on a low bar (Smith or rack), bend only the elbows, forehead under the bar.' },
+  pullup_max:    { name: 'Pull-up finisher (max reps)', type: 'reps', sets: 2, lo: 8, hi: 20, rest: 120, cue: 'Dead hang to chin over the bar, no kipping. Stop when form breaks.' },
+  pushup_max:    { name: 'Push-up finisher (max reps)', type: 'reps', sets: 2, lo: 20, hi: 40, rest: 90, cue: 'Chest to the floor, full lockout, body straight. Stop when form breaks.' },
   diamond_pu:    { name: 'Diamond push-up', type: 'reps', sets: 3, lo: 10, hi: 20, rest: 60 },
   pushdown:      { name: 'Cable triceps pushdown (rope)', type: 'weight', sets: 3, lo: 10, hi: 15, rest: 60, cue: 'Elbows pinned, spread the rope at the bottom.' },
   cable_y:       { name: 'Cable Y-raise', type: 'weight', sets: 3, lo: 12, hi: 15, rest: 60, cue: 'Lower traps + side delts. Arms make a Y, thumbs up.' },
@@ -137,15 +139,17 @@ const EX = {
 // Each slot lists [weekA, weekB, weekC] exercise ids. A single id means it stays every week.
 const DAYS = {
   // Skill blocks for focused skills are added in front automatically (see FAMILY_DAYS in app.js).
-  1: { title: 'Push', sub: 'Chest, shoulders, triceps · heavy', tone: 'push', slots: [
+  1: { title: 'Push', sub: 'Strength · chest, shoulders, triceps', tone: 'push', slots: [
         ['planche_str', 'planche_tpu', 'planche_str'],
         ['pike_pu', 'hspu_neg', 'hspu'],
+        ['pseudo_pu'],
         ['dips', 'bar_dips', 'dips'],
-        ['arnold', 'seated_db_ohp', 'arnold'],
         ['decline_pu', 'archer_pu', 'decline_pu'],
+        ['arnold', 'seated_db_ohp', 'arnold'],
+        ['incline_db'],
         ['lat_cable', 'lat_db', 'lat_lean'],
         ['skull', 'pushdown', 'skull'],
-        ['oh_ext'],
+        ['pushup_max'],
       ] },
   2: { title: 'Pull', sub: 'Back, biceps, forearms · levers', tone: 'pull', slots: [
         ['fl_straddle', 'fl_raise', 'fl_neg'],
@@ -156,6 +160,7 @@ const DAYS = {
         ['face_pull'],
         ['rear_fly'],
         ['wrist_curl', 'reverse_curl', 'wrist_curl'],
+        ['pullup_max'],
         ['calf_single'],
         ['windshield', 't2b', 'hlr'],
       ] },
@@ -172,14 +177,16 @@ const DAYS = {
         ['cable_crunch'],
         ['ytw', 'ext_rot', 'ytw'],
       ] },
-  4: { title: 'Push', sub: 'Chest, shoulders, triceps · volume', tone: 'push', slots: [
-        ['planche_lean', 'pseudo_pu', 'planche_lean'],
-        ['incline_db', 'deficit_pu', 'incline_db'],
+  4: { title: 'Push', sub: 'Volume · chest, shoulders, triceps', tone: 'push', slots: [
+        ['planche_lean', 'planche_lean', 'planche_lean'],
+        ['pseudo_pu'],
+        ['bar_dips', 'dips', 'bar_dips'],
+        ['diamond_pu', 'archer_pu', 'deficit_pu'],
         ['seated_db_ohp', 'arnold', 'seated_db_ohp'],
         ['cable_fly', 'pec_deck', 'cable_fly'],
         ['lat_db', 'lat_cable', 'lat_db'],
-        ['bar_tri', 'diamond_pu', 'bar_tri'],
-        ['pushdown', 'oh_ext', 'pushdown'],
+        ['oh_ext', 'pushdown', 'oh_ext'],
+        ['pushup_max'],
       ] },
   5: { title: 'Pull', sub: 'Back, rear delts, arms · volume', tone: 'pull', slots: [
         ['fl_tuck'],
@@ -189,6 +196,7 @@ const DAYS = {
         ['rear_fly', 'cable_y', 'rear_fly'],
         ['hammer', 'incline_curl', 'hammer'],
         ['reverse_curl', 'rev_wrist', 'reverse_curl'],
+        ['pullup_max'],
         ['calf_single'],
         ['hollow_rock', 'hlr', 'hollow_rock'],
       ] },

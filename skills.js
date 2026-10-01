@@ -441,7 +441,7 @@ const ATHLETE_GUIDE = {
 // Where this athlete starts on each ladder, and which fixed program slots a focused skill replaces.
 const SKILL_SETUP = {
   front_lever:    { start: 3, replaces: ['fl_straddle', 'fl_raise', 'fl_neg', 'fl_tuck'] },
-  planche:        { start: 4, replaces: ['planche_str', 'planche_tpu', 'pseudo_pu', 'planche_lean'] },
+  planche:        { start: 4, replaces: ['planche_str', 'planche_tpu', 'planche_lean'] },
   hspu:           { start: 1, replaces: ['pike_pu', 'hspu_neg', 'hspu'] },
   oahs_press:     { start: 0, replaces: ['handstand'] },
   back_lever:     { start: 2, replaces: ['back_lever'] },

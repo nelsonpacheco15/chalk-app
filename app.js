@@ -106,10 +106,16 @@ function getEx(id) {
   return { name: id, type: 'reps', sets: 3, lo: 8, hi: 12, rest: 90 };
 }
 
-function weekIndex(date) {
+// 4-week cycle: rotation A, B, C, then a deload week (A exercises, half the gym sets).
+function weekInfo(date) {
   const w = Math.floor(daysBetween(S.start, mondayOf(date)) / 7);
-  return ((w % 3) + 3) % 3;
+  const cycle = ((w % 4) + 4) % 4;
+  return { cycle, rot: cycle === 3 ? 0 : cycle, deload: cycle === 3 };
 }
+function weekIndex(date) { return weekInfo(date).rot; }
+const weekName = date => weekInfo(date).deload ? 'Deload' : `Week ${ROT[weekIndex(date)]}`;
+// Deload halves sets on everything except skill work and warm-ups.
+const setCount = (date, ex) => weekInfo(date).deload && !ex.tree ? Math.ceil(ex.sets / 2) : ex.sets;
 
 function planFor(date) {
   const dow = parse(date).getDay();
@@ -147,7 +153,7 @@ function setsFor(date, exId) {
   const ex = getEx(exId);
   const last = lastPerf(exId, date);
   const out = [];
-  for (let i = 0; i < ex.sets; i++) {
+  for (let i = 0; i < setCount(date, ex); i++) {
     const src = last ? (last.sets[i] || last.sets[last.sets.length - 1]) : null;
     out.push({ v: src ? src.v : ex.lo, w: src ? (src.w || 0) : 0, done: false });
   }
@@ -160,8 +166,22 @@ function materialize(date, exId) {
   return lg.sets[exId];
 }
 
-function hint(ex, last) {
-  if (!last || !(last.sets.length >= ex.sets && last.sets.every(s => s.v >= ex.hi))) return '';
+function recentPerfs(exId, before, n) {
+  const out = [];
+  for (const d of Object.keys(S.logs).filter(d => d < before).sort().reverse()) {
+    const sets = (S.logs[d].sets[exId] || []).filter(s => s.done);
+    if (sets.length) out.push(sets);
+    if (out.length >= n) break;
+  }
+  return out;
+}
+// True when the last two sessions both hit `target` on at least `sets` sets.
+function hitTwice(exId, before, sets, target) {
+  const r = recentPerfs(exId, before, 2);
+  return r.length === 2 && r.every(ss => ss.filter(s => s.v >= target).length >= sets);
+}
+function hint(ex, id, date) {
+  if (!hitTwice(id, date, ex.sets, ex.hi)) return '';
   if (ex.tree) return 'Goal hit. Level up';
   if (ex.type === 'weight') return '+2.5 kg';
   if (ex.type === 'time') return '+5 s';
@@ -262,7 +282,7 @@ function renderToday() {
   }).join('');
 
   return `
-    <div class="top"><span class="brand">Chalk</span><span class="label">Week ${ROT[plan.wk]} of 3</span></div>
+    <div class="top"><span class="brand">Chalk</span><span class="label">${weekName(date)}</span></div>
     <nav class="week">${week}</nav>
     <section class="hero ${photo ? 'has-img' : ''}">
       ${photo ? `<div class="hero-img" style="background-image:url(${photo})"></div>` : ''}
@@ -280,7 +300,7 @@ function renderToday() {
       <button class="tile" data-act="tab" data-tab="fuel"><span class="label">Calories left</span><div class="num">${T.kcal - tot.kcal}</div></button>
       <button class="tile" data-act="tab" data-tab="fuel"><span class="label">Protein left</span><div class="num">${Math.max(0, T.p - tot.p)}<small>g</small></div></button>
     </div>
-    <div class="sect"><span class="label">Session</span><span class="label">Next week: ${ROT[(plan.wk + 1) % 3]}</span></div>
+    <div class="sect"><span class="label">Session</span><span class="label">Next: ${weekName(addDays(date, 7))}</span></div>
     <ul class="plan rows">${list}</ul>`;
 }
 
@@ -356,7 +376,7 @@ function playerWarm() {
 function playerExercise() {
   const p = ui.p, id = p.steps[p.i], ex = getEx(id);
   const sets = setsFor(p.date, id), c = curSet(sets);
-  const last = lastPerf(id, p.date), h = hint(ex, last);
+  const last = lastPerf(id, p.date), h = hint(ex, id, p.date);
   const dots = sets.map((s, i) => `<i class="${s.done ? 'done' : i === c ? 'cur' : ''}"></i>`).join('');
   if (c >= sets.length) {
     return [`<h2 class="p-name">${esc(ex.name)}</h2><div class="p-dots">${dots}</div><p class="p-cue">All sets done</p>
@@ -505,8 +525,7 @@ function logMeal(m, date) {
 function skillReady(t) {
   const lvl = levelOf(t), cur = t.steps[lvl];
   if (lvl >= t.steps.length - 1) return false;
-  const last = lastPerf('sk_' + cur.id, addDays(today(), 1));
-  return !!last && last.sets.filter(s => s.v >= cur.target.value).length >= cur.target.sets;
+  return hitTwice('sk_' + cur.id, addDays(today(), 1), cur.target.sets, cur.target.value);
 }
 
 function renderSkills() {
@@ -566,11 +585,13 @@ function renderGuidePage() {
 /* ================= ME ================= */
 
 function sortedWeights() { return S.weights.slice().sort((a, b) => a.d < b.d ? -1 : 1); }
+// Weeks in a row with 6+ sessions. The current week can only add to the streak, never break it.
+function sessionsInWeek(mon) { let n = 0; for (let i = 0; i < 7; i++) if (didTrain(addDays(mon, i))) n++; return n; }
 function streak() {
-  const t = today(); let n = 0;
-  for (let d = didTrain(t) ? t : addDays(t, -1), k = 0; k < 400; k++, d = addDays(d, -1)) {
-    if (!isTrainDay(d)) continue;
-    if (didTrain(d)) n++; else break;
+  const thisMon = mondayOf(today());
+  let n = sessionsInWeek(thisMon) >= 6 ? 1 : 0;
+  for (let mon = addDays(thisMon, -7), k = 0; k < 104; k++, mon = addDays(mon, -7)) {
+    if (sessionsInWeek(mon) >= 6) n++; else break;
   }
   return n;
 }
@@ -604,7 +625,7 @@ function renderMe() {
   }).join('');
 
   return `
-    <div class="top"><span class="label">Week ${ROT[weekIndex(t)]}</span></div><h1 class="title">Me</h1>
+    <div class="top"><span class="label">${weekName(t)}</span></div><h1 class="title">Me</h1>
     <section class="card" style="margin-top:0">
       <div class="card-head"><span class="label">Bodyweight</span><span class="label">${delta != null ? `${delta > 0 ? '+' : ''}${delta} kg` : ''}</span></div>
       <div class="bw-num"><span class="num">${ui.bw.toFixed(1)}</span><span>kg</span></div>
@@ -615,15 +636,15 @@ function renderMe() {
     </section>
     <div class="grid2">
       <div class="tile"><span class="label">This week</span><div class="num">${weekDone}<small>/ 7</small></div></div>
-      <div class="tile"><span class="label">Streak</span><div class="num">${streak()}<small>days</small></div></div>
+      <div class="tile"><span class="label">Weeks in a row</span><div class="num">${streak()}</div></div>
       <div class="tile"><span class="label">Avg protein</span><div class="num">${nDays ? Math.round(pSum / nDays) : '–'}<small>g</small></div></div>
       <div class="tile"><span class="label">Avg kcal</span><div class="num">${nDays ? Math.round(kSum / nDays) : '–'}</div></div>
     </div>
     ${pbs ? `<section class="card"><div class="card-head"><span class="label">Skill bests</span></div>${pbs}</section>` : ''}
     <div class="rows" style="margin-top:10px"><button class="row link-row" data-act="guide"><span class="n">Athlete guide</span><span class="chev">${I.right}</span></button></div>
     <section class="card">
-      <div class="card-head"><span class="label">Rotation this week</span></div>
-      <div class="seg">${ROT.map((r, i) => `<button class="${weekIndex(t) === i ? 'on' : ''}" data-act="rot" data-i="${i}">${r}</button>`).join('')}</div>
+      <div class="card-head"><span class="label">This week</span></div>
+      <div class="seg" style="grid-template-columns:repeat(4,1fr)">${[...ROT, 'Deload'].map((r, i) => `<button class="${weekInfo(t).cycle === i ? 'on' : ''}" data-act="rot" data-i="${i}">${r}</button>`).join('')}</div>
       <div style="margin-top:8px">
         <label class="field-row"><span>Daily kcal</span><input type="number" inputmode="numeric" value="${S.targets.kcal}" data-act="target" data-k="kcal"></label>
         <label class="field-row"><span>Protein (g)</span><input type="number" inputmode="numeric" value="${S.targets.p}" data-act="target" data-k="p"></label>
@@ -818,7 +839,7 @@ document.addEventListener('click', e => {
       break;
     }
     case 'rot': {
-      const shift = ((+el.dataset.i - weekIndex(today())) % 3 + 3) % 3;
+      const shift = ((+el.dataset.i - weekInfo(today()).cycle) % 4 + 4) % 4;
       S.start = addDays(S.start, -7 * shift); save(); quiet(); break;
     }
     case 'export': {
