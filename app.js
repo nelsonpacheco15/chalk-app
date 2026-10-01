@@ -43,6 +43,9 @@ let S = load();
 // Add new built-in recipes to existing installs once (a deleted recipe stays deleted).
 (function seedRecipes() {
   S.seeded = S.seeded || [];
+  // Drop the old generic sample meals if they were never edited.
+  const OLD = { m1: 'Greek yogurt, oats + berries', m2: 'Chicken, rice + veg', m3: '3 eggs + 2 toast', m5: 'Tuna wrap', m7: 'Salmon, potatoes + salad', m8: 'Cottage cheese + fruit' };
+  S.meals = S.meals.filter(m => OLD[m.id] !== m.name);
   const fresh = RECIPES.filter(r => !S.seeded.includes(r.id) && !S.meals.some(m => m.id === r.id));
   if (fresh.length) S.meals = [...fresh.map(r => ({ ...r })), ...S.meals];
   RECIPES.forEach(r => { if (!S.seeded.includes(r.id)) S.seeded.push(r.id); });
