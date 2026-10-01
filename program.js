@@ -30,7 +30,7 @@ const EX = {
   lat_lean:      { name: 'Lean-away lateral raise', type: 'weight', sets: 4, lo: 12, hi: 15, rest: 60 },
   decline_pu:    { name: 'Decline push-up', type: 'reps', sets: 4, lo: 10, hi: 20, rest: 90, cue: 'Feet on a bench, body straight. Upper chest and front delts.' },
   deficit_pu:    { name: 'Deficit push-up', type: 'reps', sets: 3, lo: 12, hi: 20, rest: 90 },
-  oh_ext:        { name: 'Overhead cable extension', type: 'weight', sets: 3, lo: 10, hi: 15, rest: 60 },
+  oh_ext:        { name: 'Overhead triceps extension (cable)', type: 'weight', sets: 3, lo: 10, hi: 15, rest: 60 },
   cable_fly:     { name: 'Cable fly', type: 'weight', sets: 3, lo: 12, hi: 15, rest: 60, cue: 'Slight bend in the elbows, hug the chest, squeeze 1 s.' },
   pec_deck:      { name: 'Pec deck', type: 'weight', sets: 3, lo: 12, hi: 15, rest: 60 },
   skull:         { name: 'Skull crusher', type: 'weight', sets: 3, lo: 8, hi: 12, rest: 75, cue: 'EZ bar to the forehead, elbows still.' },
