@@ -185,7 +185,7 @@ const DAYS = {
         ['incline_db'],
         ['arnold'],
         ['lat_db', 'machine_lat', 'lat_db'],
-        ['pushdown', 'skull', 'pushdown'],
+        ['pushdown'],
         ['db_oh_ext'],
         ['pushup_max'],
       ] },
