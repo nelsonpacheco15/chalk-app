@@ -36,8 +36,8 @@ const EX = {
   skull:         { name: 'Skull crusher', type: 'weight', sets: 3, lo: 8, hi: 12, rest: 75, cue: 'EZ bar to the forehead, elbows still.' },
   archer_pu:     { name: 'Archer push-up (each side)', type: 'reps', sets: 4, lo: 5, hi: 10, rest: 90, cue: 'Working arm bent, other arm straight out. Path to the one-arm push-up.' },
   bar_tri:       { name: 'Bar triceps extension', type: 'reps', sets: 3, lo: 8, hi: 12, rest: 75, cue: 'Hands on a low bar (Smith or rack), bend only the elbows, forehead under the bar.' },
-  pullup_max:    { name: 'Pull-up finisher (max reps)', type: 'reps', sets: 2, lo: 8, hi: 20, rest: 120, cue: 'Dead hang to chin over the bar, no kipping. Stop when form breaks.' },
-  pushup_max:    { name: 'Push-up finisher (max reps)', type: 'reps', sets: 2, lo: 20, hi: 40, rest: 90, cue: 'Chest to the floor, full lockout, body straight. Stop when form breaks.' },
+  pullup_max:    { name: 'Pull-up finisher (max reps)', type: 'reps', sets: 2, fixed: true, lo: 8, hi: 20, rest: 120, cue: 'Dead hang to chin over the bar, no kipping. Stop when form breaks.' },
+  pushup_max:    { name: 'Push-up finisher (max reps)', type: 'reps', sets: 2, fixed: true, lo: 20, hi: 40, rest: 90, cue: 'Chest to the floor, full lockout, body straight. Stop when form breaks.' },
   diamond_pu:    { name: 'Diamond push-up', type: 'reps', sets: 3, lo: 10, hi: 20, rest: 60 },
   pushdown:      { name: 'Cable triceps pushdown (rope)', type: 'weight', sets: 3, lo: 10, hi: 15, rest: 60, cue: 'Elbows pinned, spread the rope at the bottom.' },
   cable_y:       { name: 'Cable Y-raise', type: 'weight', sets: 3, lo: 12, hi: 15, rest: 60, cue: 'Lower traps + side delts. Arms make a Y, thumbs up.' },
@@ -88,7 +88,7 @@ const EX = {
   calf:          { name: 'Standing calf raise (heavy)', type: 'weight', sets: 4, lo: 8, hi: 12, rest: 60, cue: 'Full stretch at the bottom, 2 s pause. No bouncing.' },
   calf_seated:   { name: 'Seated calf raise', type: 'weight', sets: 4, lo: 12, hi: 20, rest: 45, cue: 'Trains the soleus, the muscle that makes the lower leg look thick.' },
   calf_single:   { name: 'Single-leg calf raise', type: 'weight', sets: 3, lo: 12, hi: 15, rest: 30, cue: 'On a step, dumbbell in one hand. Full range.' },
-  tib_raise:     { name: 'Tibialis raise', type: 'reps', sets: 2, lo: 15, hi: 25, rest: 30, cue: 'Back against a wall, lift the toes. Front of the shin.' },
+  tib_raise:     { name: 'Tibialis raise', type: 'reps', sets: 2, fixed: true, lo: 15, hi: 25, rest: 30, cue: 'Back against a wall, lift the toes. Front of the shin.' },
   leg_ext:       { name: 'Leg extension', type: 'weight', sets: 3, lo: 12, hi: 15, rest: 60, cue: 'Pause 1 s at the top. Quads.' },
   sissy:         { name: 'Sissy squat', type: 'reps', sets: 3, lo: 8, hi: 15, rest: 60, cue: 'Knees forward, hips straight. Hold something for balance.' },
   wrist_curl:    { name: 'Wrist curl', type: 'weight', sets: 3, lo: 15, hi: 20, rest: 45, cue: 'Forearms on a bench, let the bar roll to the fingertips.' },
@@ -139,16 +139,17 @@ const EX = {
 // Each slot lists [weekA, weekB, weekC] exercise ids. A single id means it stays every week.
 const DAYS = {
   // Skill blocks for focused skills are added in front automatically (see FAMILY_DAYS in app.js).
+  // Every push day hits all push muscles once: skills, lower chest, serratus/front delt or mid chest,
+  // upper chest, front + side delts, side delts, triceps, then a push-up finisher.
   1: { title: 'Push', sub: 'Strength · chest, shoulders, triceps', tone: 'push', slots: [
         ['planche_str', 'planche_tpu', 'planche_str'],
         ['pike_pu', 'hspu_neg', 'hspu'],
-        ['pseudo_pu'],
         ['dips', 'bar_dips', 'dips'],
-        ['decline_pu', 'archer_pu', 'decline_pu'],
-        ['arnold', 'seated_db_ohp', 'arnold'],
+        ['pseudo_pu'],
         ['incline_db'],
+        ['arnold', 'seated_db_ohp', 'arnold'],
         ['lat_cable', 'lat_db', 'lat_lean'],
-        ['skull', 'pushdown', 'skull'],
+        ['oh_ext', 'skull', 'oh_ext'],
         ['pushup_max'],
       ] },
   2: { title: 'Pull', sub: 'Back, biceps, forearms · levers', tone: 'pull', slots: [
@@ -158,9 +159,7 @@ const DAYS = {
         ['l_pullup', 'c2b', 'archer'],
         ['bb_row', 'cable_row', 'cs_row'],
         ['face_pull'],
-        ['rear_fly'],
         ['wrist_curl', 'reverse_curl', 'wrist_curl'],
-        ['pullup_max'],
         ['calf_single'],
         ['windshield', 't2b', 'hlr'],
       ] },
@@ -175,17 +174,15 @@ const DAYS = {
         ['tib_raise'],
         ['ab_wheel', 'v_up', 'ab_wheel'],
         ['cable_crunch'],
-        ['ytw', 'ext_rot', 'ytw'],
       ] },
   4: { title: 'Push', sub: 'Volume · chest, shoulders, triceps', tone: 'push', slots: [
-        ['planche_lean', 'planche_lean', 'planche_lean'],
-        ['pseudo_pu'],
+        ['planche_lean'],
+        ['decline_pu', 'archer_pu', 'decline_pu'],
         ['bar_dips', 'dips', 'bar_dips'],
-        ['diamond_pu', 'archer_pu', 'deficit_pu'],
-        ['seated_db_ohp', 'arnold', 'seated_db_ohp'],
         ['cable_fly', 'pec_deck', 'cable_fly'],
+        ['seated_db_ohp', 'arnold', 'seated_db_ohp'],
         ['lat_db', 'lat_cable', 'lat_db'],
-        ['oh_ext', 'pushdown', 'oh_ext'],
+        ['pushdown', 'diamond_pu', 'pushdown'],
         ['pushup_max'],
       ] },
   5: { title: 'Pull', sub: 'Back, rear delts, arms · volume', tone: 'pull', slots: [
@@ -198,7 +195,6 @@ const DAYS = {
         ['reverse_curl', 'rev_wrist', 'reverse_curl'],
         ['pullup_max'],
         ['calf_single'],
-        ['hollow_rock', 'hlr', 'hollow_rock'],
       ] },
   6: { title: 'Legs', sub: 'Quads, calves, abs · volume', tone: 'legs', slots: [
         ['handstand'],
@@ -211,8 +207,6 @@ const DAYS = {
         ['calf'],
         ['farmer'],
         ['ab_wheel', 'dragon_flag', 'ab_wheel'],
-        ['hlr', 't2b', 'hlr'],
-        ['pallof'],
       ] },
   0: { title: 'Mobility', sub: 'Light skill + flexibility', tone: 'mob', slots: [
         ['wrist_prep'],
@@ -267,3 +261,10 @@ const DEFAULT_MEALS = [
   { id: 'm4', name: 'Protein shake', kcal: 130, p: 25 },
   { id: 'm6', name: 'Banana', kcal: 120, p: 1 },
 ];
+
+// The athlete trains 4 working sets per exercise. Mobility, warm-ups and finishers keep their own counts.
+const WORK_SETS = 4;
+(function applyWorkSets() {
+  const light = new Set([...DAYS[0].slots.flat(), ...Object.values(WARMUPS).flat()]);
+  for (const [id, ex] of Object.entries(EX)) if (!light.has(id) && !ex.fixed) ex.sets = Math.max(ex.sets, WORK_SETS);
+})();

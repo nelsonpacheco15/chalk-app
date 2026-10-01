@@ -83,7 +83,7 @@ function stepExercise(tree, idx) {
   return {
     name: st.name,
     type: st.type === 'time' ? 'time' : 'reps',
-    sets: st.target.sets,
+    sets: Math.max(st.target.sets, typeof WORK_SETS !== 'undefined' ? WORK_SETS : 3),
     lo: Math.max(1, Math.round(val * (st.type === 'time' ? 0.5 : 0.6))),
     hi: val,
     rest: 150,
