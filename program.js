@@ -165,6 +165,7 @@ const DAYS = {
         ['back_squat', 'front_squat', 'back_squat'],
         ['bulgarian', 'walking_lunge', 'bulgarian'],
         ['rdl', 'hip_thrust', 'rdl'],
+        ['leg_curl', 'nordic', 'leg_curl'],
         ['calf'],
         ['tib_raise'],
         ['ab_wheel', 'v_up', 'ab_wheel'],

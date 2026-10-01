@@ -369,7 +369,7 @@ function playerExercise() {
       <input type="number" inputmode="decimal" value="${s.w}" data-act="p-input" data-f="w" aria-label="Weight"><span>kg</span>
       <button class="adj" data-act="inc" data-f="w">+</button></div>` : '';
   return [`
-    ${ex.tree ? '<span class="label">Skill</span>' : ''}
+    ${ex.tree ? '<span class="label">Skill · quality over reps</span>' : ex.type === 'weight' ? '<span class="label">Muscle · last 2 reps hard</span>' : ''}
     <h2 class="p-name">${esc(ex.name)}</h2>
     <p class="p-cue">${ex.cue ? esc(ex.cue) : `Target ${fmtTarget(ex)}`}</p>
     <div class="p-dots">${dots}</div>

@@ -420,6 +420,8 @@ const ATHLETE_GUIDE = {
       body: 'Stop the skill if you feel sharp elbow pain (inner or front), wrist pain under load, pain lasting more than 48 h, or night pain. Back off load, train pain-free variants and see a physio if it persists.' }
   ],
   training: [
+    { title: 'Building muscle in the gym',
+      body: 'Gym exercises (marked Muscle) build size. Stop each set with 1-2 reps left. When you hit the top of the rep range on every set, add the smallest weight step. Rest 1-2 min. Muscle needs food: eat near 2,400 kcal.' },
     { title: 'Skill work first, fresh and short',
       body: 'Do hardest skills first after warm-up. Use low reps or short holds at high quality, 2-3 min rest between sets. End the set when form breaks. Strength accessories come after.' },
     { title: 'Frequency and focus',
