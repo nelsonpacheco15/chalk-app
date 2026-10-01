@@ -49,6 +49,14 @@ let S = load();
   const fresh = RECIPES.filter(r => !S.seeded.includes(r.id) && !S.meals.some(m => m.id === r.id));
   if (fresh.length) S.meals = [...fresh.map(r => ({ ...r })), ...S.meals];
   RECIPES.forEach(r => { if (!S.seeded.includes(r.id)) S.seeded.push(r.id); });
+  // Refresh built-in recipe details when they change (keeps the user's own meals untouched).
+  if ((S.recipesV || 1) < RECIPES_VERSION) {
+    S.meals = S.meals.map(m => { const r = RECIPES.find(x => x.id === m.id); return r ? { ...r } : m; });
+    S.recipesV = RECIPES_VERSION;
+  }
+  // Built-in recipes first, in the order of the day.
+  const order = id => { const i = RECIPES.findIndex(r => r.id === id); return i < 0 ? 99 : i; };
+  S.meals = S.meals.map((m, i) => [m, i]).sort((a, b) => order(a[0].id) - order(b[0].id) || a[1] - b[1]).map(x => x[0]);
   save();
 })();
 function save() { try { localStorage.setItem(KEY, JSON.stringify(S)); } catch (e) { /* ignore */ } }
@@ -462,7 +470,7 @@ function renderFuel() {
     <div class="mid"><div class="num">${Math.abs(left)}</div><div class="label">${over ? 'kcal over' : 'kcal left'}</div></div></div>`;
 
   const tiles = S.meals.map(m => `<button class="meal" data-act="${ui.editMeals ? 'edit-meal' : 'log-meal'}" data-id="${m.id}">
-      ${counts[m.id] ? `<span class="cnt">${counts[m.id]}</span>` : ''}<span class="nm">${esc(m.name)}</span>
+      ${counts[m.id] ? `<span class="cnt">${counts[m.id]}</span>` : ''}<span class="nm">${esc(m.name)}</span>${m.items ? `<span class="ing">${m.items.map(esc).join(' · ')}</span>` : ''}
       <span class="mac">${m.kcal} · <b>${m.p}g</b></span></button>`).join('');
 
   const yday = S.food[addDays(date, -1)] || [];
@@ -761,9 +769,10 @@ document.addEventListener('click', e => {
       break;
     }
     case 'log-day': {
-      const day = S.meals.filter(m => m.day);
-      const added = day.map(m => logMeal(m, ui.foodDate)); quiet();
-      toast(`Logged ${day.length} meals`, 'Undo', () => { const ids = added.map(x => x.id); S.food[ui.foodDate] = S.food[ui.foodDate].filter(f => !ids.includes(f.id)); save(); quiet(); });
+      const added = [];
+      S.meals.filter(m => m.day).forEach(m => { for (let k = 0; k < (+m.day || 1); k++) added.push(logMeal(m, ui.foodDate)); });
+      quiet();
+      toast(`Logged ${added.length} items`, 'Undo', () => { const ids = added.map(x => x.id); S.food[ui.foodDate] = S.food[ui.foodDate].filter(f => !ids.includes(f.id)); save(); quiet(); });
       break;
     }
     case 'copy-yday': {

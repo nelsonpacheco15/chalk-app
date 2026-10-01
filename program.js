@@ -234,15 +234,18 @@ const SKILLS = [
 // The athlete's own recipes. Macros estimated from standard values
 // (soy milk 4 g protein/100 ml, dried/pressed tofu ~150 kcal + 16 g protein per 100 g, Greek-style yogurt).
 const RECIPES = [
-  { id: 'r_breakfast', name: 'Oats, banana + protein', kcal: 515, p: 38, day: true,
+  { id: 'r_breakfast', name: 'Oats, soy milk, banana + protein', kcal: 515, p: 38, day: 1,
     items: ['55 g oats', '200 ml soy milk', '1 big banana', '27 g protein powder'] },
-  { id: 'r_lunch', name: 'Tofu, edamame + sweet potato', kcal: 495, p: 39, day: true,
-    items: ['80 g edamame', '150 g dried tofu', '1 medium sweet potato', '2× coffee (120 g) with 40 g milk'] },
-  { id: 'r_dinner', name: 'Pasta, eggs + tofu', kcal: 725, p: 53, day: true,
+  { id: 'r_lunch', name: 'Tofu, edamame + sweet potato', kcal: 450, p: 36, day: 1,
+    items: ['80 g edamame', '150 g dried tofu', '1 medium sweet potato'] },
+  { id: 'r_coffee', name: 'Coffee with milk', kcal: 22, p: 1, day: 2,
+    items: ['120 g coffee', '40 g milk'] },
+  { id: 'r_dinner', name: 'Pasta, eggs + tofu', kcal: 725, p: 53, day: 1,
     items: ['80 g pasta (dry)', '2 eggs', '60 g broccoli', '80 g edamame', '120 g dried tofu'] },
-  { id: 'r_snack', name: 'Yogurt, blueberries + banana', kcal: 200, p: 10, day: true,
+  { id: 'r_snack', name: 'Yogurt, blueberries + banana', kcal: 200, p: 10, day: 1,
     items: ['80 g yogurt', '40 g blueberries', '1 big banana'] },
 ];
+const RECIPES_VERSION = 2;
 
 const DEFAULT_MEALS = [
   ...RECIPES,

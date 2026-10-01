@@ -1,5 +1,5 @@
 // Offline cache: app shell is cache-first, everything else network-first with cache fallback.
-const CACHE = 'chalk-v6';
+const CACHE = 'chalk-v7';
 const SHELL = ['./', 'index.html', 'styles.css', 'app.js', 'program.js', 'skills.js', 'manifest.webmanifest', 'icon.svg', 'icon-192.png', 'icon-512.png', 'icon-180.png'];
 
 self.addEventListener('install', e => {
