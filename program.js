@@ -182,7 +182,6 @@ const DAYS = {
         ['planche_lean'],
         ['dips'],
         ['incline_db'],
-        ['pec_deck'],
         ['arnold'],
         ['lat_db', 'machine_lat', 'lat_db'],
         ['pushdown', 'skull', 'pushdown'],
