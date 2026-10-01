@@ -1,5 +1,5 @@
 // Offline cache: app shell is cache-first, everything else network-first with cache fallback.
-const CACHE = 'chalk-v4';
+const CACHE = 'chalk-v5';
 const SHELL = ['./', 'index.html', 'styles.css', 'app.js', 'program.js', 'skills.js', 'manifest.webmanifest', 'icon.svg', 'icon-192.png', 'icon-512.png', 'icon-180.png'];
 
 self.addEventListener('install', e => {
@@ -11,7 +11,8 @@ self.addEventListener('activate', e => {
 self.addEventListener('fetch', e => {
   if (e.request.method !== 'GET') return;
   e.respondWith(
-    fetch(e.request).then(res => {
+    // no-cache: always revalidate with the server so a new deploy shows up on the next open
+    fetch(e.request, { cache: 'no-cache' }).then(res => {
       const copy = res.clone();
       caches.open(CACHE).then(c => c.put(e.request, copy));
       return res;
