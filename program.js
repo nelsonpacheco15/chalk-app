@@ -42,6 +42,7 @@ const EX = {
   pullup_max:    { name: 'Pull-up finisher (max reps)', type: 'reps', sets: 2, fixed: true, lo: 8, hi: 20, rest: 120, cue: 'Dead hang to chin over the bar, no kipping. Stop when form breaks.' },
   pushup_max:    { name: 'Push-up finisher (max reps)', type: 'reps', sets: 2, fixed: true, lo: 20, hi: 40, rest: 90, cue: 'Chest to the floor, full lockout, body straight. Stop when form breaks.' },
   diamond_pu:    { name: 'Diamond push-up', type: 'reps', sets: 3, lo: 10, hi: 20, rest: 60 },
+  db_oh_ext:     { name: 'Dumbbell overhead triceps extension', type: 'weight', sets: 4, lo: 10, hi: 12, rest: 75, cue: 'Seated, one dumbbell in both hands, lower it deep behind the head. Triceps long head.' },
   pushdown:      { name: 'Cable triceps pushdown (rope)', type: 'weight', sets: 3, lo: 10, hi: 15, rest: 60, cue: 'Elbows pinned, spread the rope at the bottom.' },
   cable_y:       { name: 'Cable Y-raise', type: 'weight', sets: 3, lo: 12, hi: 15, rest: 60, cue: 'Lower traps + side delts. Arms make a Y, thumbs up.' },
   rear_fly:      { name: 'Rear delt fly', type: 'weight', sets: 3, lo: 15, hi: 20, rest: 60, cue: 'Pinkies up, think "push the dumbbells apart".' },
@@ -185,6 +186,7 @@ const DAYS = {
         ['arnold'],
         ['lat_db', 'machine_lat', 'lat_db'],
         ['pushdown', 'skull', 'pushdown'],
+        ['db_oh_ext'],
         ['pushup_max'],
       ] },
   5: { title: 'Pull', sub: 'Back, rear delts, arms', tone: 'pull', slots: [
